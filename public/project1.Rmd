@@ -1,0 +1,140 @@
+---
+title: "Baby Name Project"
+author: "Danielle De La Paz"
+date: "2020-03-11" 
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+chooseCRANmirror(graphics=FALSE, ind=1)
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", warning = F, message = F,
+tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Introduction: The reason I chose this baby names dataset is because my cousin is expecting her first child. When searching for datasets this one stuck out to me as it was a statistics on the how many baby's had a specific name during a specific year. The statisitics were acquired by using the social security number applicants being asssigned to newborn baby's. The first dataset I chose was the amount of applicants. This included the year, sex, and amount of applicants total(n_all) that were participating in the baby names statistic. The second dataset, baby names,  included the year, sex, name of baby's, n (which is the amount of applicants with that name in the specific year), and prop (proportion of people with the specific gender and that specific name in the year). The third dataset, lifetables, included the amount of births in the specific year.  
+Tidy:
+## Tidy: The datasets were already tidy before joining.
+```{R}
+library(tidyverse)
+install.packages("babynames")
+?babynames
+applicants <- babynames::applicants
+applicants
+babynames <- babynames::babynames
+babynames
+lifetables <- babynames::births
+lifetables
+```
+Join 2+ Datasets
+I joined the first two datasets, "applicants and babynames" by year and sex. I did a full join considering they shared these two variables, and called the dataset "merged". I then did a second full join to join the third dataset, lifetables by joining by year . I called the final dataset "merged new"" that included all three datasets.
+No cases were dropped in joining all three datasets.
+
+
+```{R}
+merged <-babynames %>% full_join(applicants)
+mergednew<- merged %>% full_join(lifetables)
+mergednew
+```
+
+Wrangling
+In order to make my data more readable the first operation I did was create a new data frame called “newer”. In this data frame I created a new function using dplyr ‘mutate’ called “Namesfromfamily” to get the amount of those applicants with that specific name multiplied by the proportion of those who had that name.  Using ‘filter’ I eliminated data that did not have the amount of births recorded in a specific year. As well as, ‘renamed’ n_all to be more readable as “totalapplicants”. The first dplyr functions I used were ‘filter’, ‘select’, and ‘arrange’, I found the amount of names in the year 1910 by descending order, which meant the greatest number of names found in 1910 were 22848. I did a similar code in my second dplyr function using ‘select’, and ‘arrange’. I selected the year, sex, name and birth, then arranged in descending order the greatest number of births. I found the year 2007 to have the greatest number of births with a multitude of different names. I used ‘group_by’ dplyr function to group the “names” then used ‘summarize’ to get the mean from each “Namesfromfamily”. I then used ‘group_by’ and ‘arrange’ to get the year arranged by the greatest proportion which was in year 2007.
+
+For summary statistics, I used ‘summarize’ function to find the standard deviation of the amount of people with that name (n), 1564.624. I then used the ‘summarize_all’ function to make sure none of my values were missing values, which was 0, meaning no values were missing values. I used the ‘summarize_at’ with ‘mean’ for “year, Namesfromfamily, and n” to find the numerical mean for each which was, year= 1978.498, Namesfromfamily= 1.493726, and n=184.0135. I used ‘group_by’ , ‘summarize’, with ‘sd’ to group by “sex” and find the standard deviation of “births” and “Namesfromfamily”. For female, 507727.0 sd for births and 29.34482 sd for Namesfromfamily. For male, 534744.7 sd for births and 59.94562 sd for Namesfromfamily. I used ‘group_by’ “sex” and “name” then used ‘summarize’ function with ‘min’ to find the minimum “proportion” and minimum “totalapplicants”. I did a similar function for the next code using ‘group_by’ and ‘summarize’ with ‘max’ to find the max “n” and “births” for each specific year.  I did a similar function but used  ‘group_by’ and ‘summarize’ with ‘var’ to find the variance in Namesfromfamily grouped by name. Using ‘group_by’, ‘summarize’ and ‘IQR’ for “n” I found the IQR for n for each sex which was 23 for female, and 26 for male. I then did a correlation matrix with ‘cor’ function to find the greatest correlation, which was between “births” and “totalapplicants” with correlation 0.93345366. For my second to last code I used ‘group_by’ and ‘summarize’ with ‘median’ to find the median of “n” per year. My last code I used ‘summarize’ to find the last numerical birth which was 3855500.
+In demonstrating the usage of 'pivot_longer'(since my data was already tidy) , I used column "n" to fall under "Namespicked" and the moved the values to "Namesvalue". To demonstrate 'pivot_wider' I first reduced my large set of data to the first 10 observations. I then made the "names" there own column with there own name and moved the value "n" under each name.
+
+
+```{R}
+newer <- mergednew %>% mutate(Namesfromfamily = prop*n)%>% filter(!is.na(births)) %>% rename(totalapplicants=n_all)
+newer
+newer %>% filter(year == 1910) %>% select(n) %>% arrange(desc(n))
+newer %>% select(year,sex,name, births) %>% arrange(desc(births))
+newer %>% group_by(name) %>% summarize(mean(Namesfromfamily))
+newer %>% group_by(year) %>% arrange(prop)
+newer %>% summarize(sd(n))
+newer %>% summarize_all(function(x)sum(is.na(x)))
+newer %>% summarize_at(c("year", "Namesfromfamily", "n"), mean, na.rm=T)
+newer %>% group_by(sex) %>%
+  summarize(sd_births= sd(births, na.rm=T), sd_Namesfromfamily=sd(Namesfromfamily, na.rm = T))
+newer %>% group_by(sex, name) %>% summarize(min(prop), min(totalapplicants))
+newer %>% group_by(year) %>% summarize(max(n), max(births))
+newer %>% group_by(name) %>% summarize(var(Namesfromfamily))
+newer %>% group_by(sex) %>% summarize(IQR(n))
+newer %>% select_if(is.numeric) %>% na.omit %>% cor %>% t
+newer %>% group_by(year) %>% summarize(median_n= median(n), na.rm=T)
+newer %>% summarize(last_births= last(births), na.rm=T)
+newer %>% pivot_longer(cols=c("n"), names_to = "Namespicked", values_to = "Namesvalues")
+fordemonstration <-newer[1:10,]
+fordemonstration %>% pivot_wider(names_from = "name", values_from = "n")
+
+```
+
+## Including Plots
+Visualizing 
+The first code I ran was a correlation heatmap of my numerical variables. I coded this on a ‘scale_fill_gradient’, showing the less correlation they have are shown in red, and the greater correlation are in blue. Interpreting this heatmap the greater correlations are seen between “totalapplicants” and “births” with 0.93. As well as between “prop” and “n” with a greater correlation of 0.95. The second code I codensed the dataset to 10000 variables due to the overwhelming amount of observations being 1839952 which caused  R studio to glitch. This new condensed dataset was called “newermost”.  This new dataset was plotted using ggplot with x-axis labeled as year, y-axis being labeled as birth, and the two lines being plotted as male and female sex. This plot showed the “Amount of Births per Year in correlation to sex”. It was shown that in total there were a greater amount of female births than males births. Although through the years of 1909 through 1910 male births were greater. 
+The second ggplot graph, was condensed even more to show variables 1 through 100, called “mostnewdata”. This new ggplot graph was labeled “Relationship of the Amount of Names in correlation to Proportion” which plotted the Amount of Name (n) against proportion(prop). The “Namesfromfamily '' showed the linear relationship of the two. It was shown as the amount of names increased the proportion increased.This was graphed on a log scale and the ‘scale_color_gradient’ was used to visually show the increase.
+
+```{R}
+newer %>% select_if(is.numeric) %>% cor %>% as.data.frame %>%
+  rownames_to_column %>% pivot_longer(-1) %>% na.omit %>% ggplot(aes(rowname, name, fill=value))+ 
+  geom_tile()+geom_text(aes(label=round(value,2)))+ xlab("")+ylab("")+scale_fill_gradient(low="red", high = "blue")
+
+library(ggplot2)
+
+
+newermost <- newer[1:10000,]
+ggplot(data= newermost, aes(x = year, y = births, color= sex )) + geom_smooth(method= "lm") +ggtitle("Amount of Births per Year according to sex")
+
+mostnewdata <- newer [1:100,]
+mostnewdata
+ggplot(mostnewdata, aes(x= n, y= prop, color= Namesfromfamily), size= 2, alpha=.5) + 
+  geom_point() + scale_x_log10()+scale_y_log10() +
+  scale_color_gradient(low="yellow", high="red") + xlab("Amount of Name(n)") + 
+  ylab("Proportion(prop)") + 
+  ggtitle("Relationship of the Amount of Names in correlation to Proportion") 
+
+```
+
+
+Dimensionality Reduction:
+In order to find the number of clusters for kmeans, I first reduced my data to 10000 variables calling it “thenew”. I then selected 3 numerical variables such as “Namesfromfamily, n, and prop” from “thenew” to be called “clust_dat”. Before finding the x variable in “kmeans(x)” number, I used WSS to find the number of clusters. After multiple trial and error, I chose the number 5 to be the most efficient as it started to gradually decrease from “the elbow”. In order to continue searching for the correct number of clusters I plotted the graph using ggplot to see if “Proportion (prop)” against “Amount of name (n)” would give me insight as to how many clusters I should choose. The distribution was unclear so I decided to do silhouette width in k means to find if the greatests silhouette width would give me the correct number of clusters. After analyzing all three, “WSS, ggplot, and Silhouette width” I decided the number of clusters to be 5. I then plotted this in ggplot using “kmeansclust” as it was first mutated to become a column, I plotted the “Proportion (prop)” on the x-axis, and the “Amount of Name (n)” on the y-axis, clustering by “Namesfromfamily”. I also used ‘scale_color_gradientn’ with rainbow to make the clusters more visible.  Overall through multiple trial and error I found 5 clusters to be the most effective in visually displaying the data.
+
+```{R}
+library(cluster)
+thenew <- newer[1:10000,]
+thenew
+clust_dat <- thenew %>% select(Namesfromfamily, n,prop)
+kmeans1 <- clust_dat %>% scale %>% kmeans(5)
+kmeans1
+kmeans1$centers
+kmeans1$cluster
+
+wss<-vector()
+for(i in 1:10){
+  new<- thenew %>% select(prop,n) %>% kmeans(i)
+  wss[i]<-new$tot.withinss
+}
+ggplot()+geom_point(aes(x=1:10, y=wss))+geom_path(aes(x=1:10, y=wss))+ xlab("clusters") + scale_x_continuous(breaks = 1:10)
+
+thenew %>% ggplot()+geom_point(aes(prop,n))
+
+kmeansclust <- clust_dat %>% mutate(cluster=as.factor(kmeans1$cluster))
+kmeansclust %>% ggplot(aes(prop,n, color=Namesfromfamily)) + geom_point() + ylab("Amount of Name(n)") + xlab("Proportion(prop)") + ggtitle("kmeans")+ scale_color_gradientn(colours= rainbow(5))
+
+sil_width <- vector()
+for(i in 2:10){
+  kms<- kmeans(clust_dat,centers=i)
+  sil<- silhouette(kms$cluster, dist(clust_dat))
+  sil_width[i]<- mean(sil[,3])
+}
+ggplot()+geom_line(aes(x=1:10, y=sil_width))+ scale_x_continuous(name="k", breaks=1:10)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

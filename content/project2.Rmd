@@ -1,0 +1,239 @@
+---
+title: "Project 2 Dani"
+author: "Danielle De La Paz"
+date: "2020-05-01" 
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+chooseCRANmirror(graphics=FALSE, ind=1)
+knitr::opts_chunk$set(warning = FALSE,message = FALSE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+Introduction: The dataset I have chosen is called 'hurricNamed', this is the Named US Atlantic Hurricanes and their statistics. It consists of 94 observations with 11 variables. This first variable (name) is the Hurricane Name, the second (year) is the year it occurred in. The third is the maximum windspeed along the US coast labeled as LF.WindsMPH. The fourth is the LF.PressureMB which is the atmospheric pressure. The LF.times is the date of the first landfall, the BaseDam2014 is the property damage in millions if the hurricane would have been in 2014. The BaseDamage is the property damage in millions while NDAM2014 is the damage if the hurricane had happened in 2014. The AffectedStates is where the hurricane had occurred. The firstLF is the date of the first landfall. The deaths is the number of deaths during the hurricanes and the mf is the gender name of the hurricane which is also the binary variable in this project.
+1.) 
+```{R}
+library(readr)
+hurricNamed_2 <- read_csv("hurricNamed 2.csv")
+hurricNamed<-hurricNamed_2
+library(dplyr)
+dataomit<-hurricNamed %>% select(-Name)%>% select(-BaseDamage) %>% 
+  select(-BaseDam2014) %>% select(-mf) %>% select(-LF.times)%>% 
+  select(-NDAM2014) %>% 
+  select(-AffectedStates)%>%
+  select(-firstLF) %>%
+  select(-deaths)
+man1<- manova(cbind(LF.WindsMPH, LF.PressureMB)~Year, data=dataomit)
+summary(man1)
+summary.aov(man1)
+dataomit1 <- dataomit%>% group_by(Year,LF.WindsMPH) %>% filter(n()>1)
+pairwise.t.test(dataomit1$LF.WindsMPH, dataomit1$Year, p.adj="none")
+(1-.95)^24
+.05/24
+```
+
+I performed 1 MANOVA, 2 ANOVAS, and 21 T-test. In total 24 test were run. The probability of at least one type 1 error is 5.960464e-32. The Bonferronis correction is 0.002083333.
+A one way MANOVA was used to determine the effect of the Hurricane Year on two dependent variables the LF.WindsMPH and the LF.PressureMB.
+There were significant differences found within the two hurricane names for at least one of the dependent variables.
+Therefore univariant ANOVAs for each dependent variable were conducted as follow up test to the MANOVA. The univariant ANOVA'S for LF.WindsMPH was the only significant variable as it was less than .05, meaning a post-hoc t.test was performed. 
+The post hoc analysis showed which Year differed in LF.WindsMPH. The Boneferroni adjustment showed to be  0.002083333. Therefore multiple years were found to differ significantly from each other in terms of LF.WindsMPH.
+Some of the assumptions state random samples and independent observations. This is technically not a random sample as some of the data was omitted due to having only one observation in a variable. Another of the assumptions states that there should be no multicollinearity which is assumed and by the t.test seems to show that the dependent variable is not too correlated. Overall the assumptions were not likely to be met.
+
+
+2.)
+```{R}
+rand_dist<- vector()
+for(i in 1:5000){
+  new <-data.frame(BaseDamage= sample(hurricNamed$BaseDamage),mf= hurricNamed$mf)
+  rand_dist[i] <- mean(new[new$mf== "f", ]$BaseDamage)-
+    mean(new[new$mf == "m", ]$BaseDamage)
+}
+hurricNamed %>% group_by(mf)%>% 
+  summarize(means=mean(BaseDamage)) %>% 
+  summarize(`mean_diff:`=diff(means))
+{hist(rand_dist, main="", ylab=""); abline(v=59.1, col="red")}
+mean(rand_dist>59.1)*2
+```
+Null hypothesis: Mean property damage (BaseDamage) is the same for male vs. female hurricane names.
+Alternative hypothesis: Mean property damage is different for male vs female hurricane names.
+We fail to reject the null hypothesis because the p-value is greater than .05 which is non-significant. 
+
+
+3.)
+```{R}
+library(ggplot2)
+library(sandwich); library(lmtest)
+hurricNamed$LF.WindsMPH_c<- hurricNamed$LF.WindsMPH-mean(hurricNamed$LF.WindsMPH)
+hurricNamed$LF.PressureMB_c <-hurricNamed$LF.PressureMB-mean(hurricNamed$LF.PressureMB)
+fit<-lm(NDAM2014~ LF.WindsMPH_c*LF.PressureMB_c, data=hurricNamed)
+summary(fit)
+
+hurricNamed %>% 
+  ggplot(aes(x=NDAM2014, y=LF.WindsMPH_c, color=LF.PressureMB_c)) + 
+  geom_smooth(method = "lm")
+resids<-fit$residuals
+fitvals<- fit$fitted.values
+ggplot()+geom_point(aes(fitvals,resids))+geom_hline(yintercept = 0, color='red')
+
+ks.test(resids, "pnorm", mean=0, sd(resids))
+
+bptest(fit)
+summary(fit)$coef[,1:2]
+coeftest(fit, vcov=vcovHC(fit))[,1:2]
+
+
+```
+For every damage that had the hurricane appeared in 2014, the maximum sustained windspeed had an average of -251.821mph less than maximum sustained pressure. 
+Doing the BP test we reject the null hypothesis of equal variance  meaning the assumption is violated. The uncorrected standard errors assume the null hypothesis is correct. Coeftest corrects the standard errors to heteroskedasticity standard errors. The estimates are found to be the same but the coeftest standard errors are larger because the null hypothesis is rejected.
+
+R^2 is the proportion of variation in the response variable explained by the model or all predictors at once is 0.453. This means that 45% of variability in NDAM2014 is explained.
+
+4.)
+```{R}
+samp_distn<-replicate(5000, {
+  boot_dat<- sample_frac(hurricNamed, replace=T)
+  fit<-lm(NDAM2014~ LF.WindsMPH_c*LF.PressureMB_c, data=boot_dat)
+  coef(fit)
+})
+samp_distn %>%t%>%as.data.frame%>%summarize_all(sd)
+
+```
+The standard errors of the boostrap compared to the robust SE decreased. Since the standard error of the bootstrap decreased this means the p value would also decrease. As well as the bootstrap standard errors compared to the original SEs are greater meaning the p value will have increased in the bootstrap standard errors because the standard errors are greater than the original SEs.
+
+5.)
+```{R}
+library(tidyverse)
+
+newhurric<-hurricNamed %>% mutate(y=ifelse(mf=="f", 1,0))
+head(newhurric)
+fit4<- glm(y~Year+BaseDamage, data=newhurric, family = "binomial")
+coeftest(fit4)
+exp(coef(fit4))
+newhurric1<- newhurric %>% mutate(prob=predict(fit4, type="response"),
+                          prediction=ifelse(prob>.5,1,0))
+newhurric1$mf<-factor(newhurric$mf, levels = c("f", "m"))
+
+classify<-newhurric1%>%transmute(prob,prediction,truth=y)
+
+table(prediction=classify$prediction, truth=classify$truth) %>% addmargins()
+(6+57)/94
+6/13
+57/81
+6/30
+
+newhurric1$logit<-predict(fit4,type="link")
+newhurric1%>%ggplot()+geom_density(aes(logit,color=mf,fill=mf), alpha=.4)+
+  theme(legend.position=c(.85,.85))+geom_vline(xintercept=0)+xlab("logit (log-odds)")+
+  geom_rug(aes(logit,color=mf))+
+  geom_text(x=-5,y=.07,label="TN = 431")+
+  geom_text(x=-1.75,y=.008,label="FN = 19")+
+  geom_text(x=1,y=.006,label="FP = 13")+
+  geom_text(x=5,y=.04,label="TP = 220")
+
+library(plotROC)
+ROCplot<- ggplot(classify)+geom_roc(aes(d=truth, m=prob), n.cuts = 0)
+ROCplot
+library(pROC)
+calc_auc(ROCplot)
+
+class_diag <- function(probs,truth){
+  
+  
+  tab<-table(factor(probs>.5,levels=c("FALSE","TRUE")),truth)
+  acc=sum(diag(tab))/sum(tab)
+  sens=tab[2,2]/colSums(tab)[2]
+  spec=tab[1,1]/colSums(tab)[1]
+  ppv=tab[2,2]/rowSums(tab)[2]
+
+  if(is.numeric(truth)==FALSE & is.logical(truth)==FALSE) truth<-as.numeric(truth)-1
+  
+ 
+  ord<-order(probs, decreasing=TRUE)
+  probs <- probs[ord]; truth <- truth[ord]
+  
+  TPR=cumsum(truth)/max(1,sum(truth)) 
+  FPR=cumsum(!truth)/max(1,sum(!truth))
+  
+  dup<-c(probs[-1]>=probs[-length(probs)], FALSE)
+  TPR<-c(0,TPR[!dup],1); FPR<-c(0,FPR[!dup],1)
+  
+  n <- length(TPR)
+  auc<- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+
+  data.frame(acc,sens,spec,ppv,auc)
+}
+
+newhurric3<- newhurric1 %>% select(-Name) %>% select(-AffectedStates)
+
+set.seed(1234)
+
+fraction<-0.5 
+train_n<-floor(fraction*nrow(newhurric3)) 
+
+iter<-500 
+
+diags<-NULL
+for(i in 1:iter){
+  train_index<-sample(1:nrow(newhurric3),size=train_n)
+  train<-newhurric3[train_index,] 
+  test<-newhurric3[-train_index,]
+  truth<-test$y
+  fit<-glm(y~Year+BaseDamage,data=train,family="binomial")
+  probs<-predict(fit,newdata = test,type="response")
+  diags<-rbind(diags,class_diag(probs,truth))
+}
+summarize_all(diags,mean)
+
+```
+The odds of the hurricane being given a female name for each year, and property damage is 2.358877e+37. Controlling for property damage, the odds of being given a female hurricane name increases by a factor of 9.578855e-01 which is not significant. Controlling for year, the odds of being female hurricane name increases by a factor of 1.000027e+00 which is significant. The accuracy is 0.6702128 which is the proportion of the correctly classified hurricane names. The sensitivity 0.4615385 is the true positive rates which is the proportion of female hurricanes names correctly classified. The specificity 0.7037037 is the true negative rate which is the proportion of male hurricane names correctly classified.The PPV precision is 0.2 which is the proportion classified as female hurricane names who actually are.
+The auc is 0.6916667 which means the probability that a randomly selected hurricane female name has a higher predicted probability than a randomly selected hurricane male name.After computing the random sub sampling CV the average sensitivity is 0.8415599, the average accuracy is 0.6455319	and the recall is 0.7084499.
+
+6.)
+```{R}
+library(glmnet)
+newhurric3<- newhurric1 %>% select(-mf) %>% select(-Name) %>% select(-AffectedStates) %>% select(-X1)
+view(newhurric3)
+y<- as.matrix(newhurric3$BaseDamage)
+x<- newhurric3 %>% mutate_all(scale) %>% as.matrix
+cv<- cv.glmnet(x,y)
+lasso1<-glmnet(x,y, lambda=cv$lambda.1se)
+coef(lasso1)
+
+
+set.seed(1234)
+k=10 
+
+data5<-newhurric3[sample(nrow(newhurric3)),] 
+folds<-cut(seq(1:nrow(newhurric3)),breaks=k,labels=F) 
+
+diags<-NULL
+for(i in 1:k){
+  train1<-data5[folds!=i,]
+  test<-data5[folds==i,]
+  
+ 
+  fit<-lm(BaseDamage~.,data=train1)
+  
+ 
+  yhat<-predict(fit,newdata=test)
+  
+ 
+  diags<-mean((test$BaseDamage-yhat)^2) 
+}
+mean(diags)
+
+
+
+```
+The variables that are retained are the BaseDamage. The much smaller MSE indicates less overfitting occurring within the model, meaning this would be a good model to make accurate predictions.
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

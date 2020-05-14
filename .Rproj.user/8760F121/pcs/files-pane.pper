@@ -1,0 +1,9 @@
+{
+    "path" : "~/Desktop/project/content/blog",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

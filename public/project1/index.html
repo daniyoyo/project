@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Danielle De La Paz" />
+    <meta name="description" content="Describe your website">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>Baby Name Project</title>
+    <meta name="generator" content="Hugo 0.70.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="/blog/">BLOG</a></li>
+        
+        <li><a href="/projects/">PROJECTS</a></li>
+        
+        <li><a href="/resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="/project1/">Baby Name Project</a></strong>
+          </h3>
+        </div>
+        <div class="blog-title">
+          <h4>
+          March 11, 2020
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<div id="r-markdown" class="section level2">
+<h2>R Markdown</h2>
+<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
+<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Introduction: The reason I chose this baby names dataset is because my cousin is expecting her first child. When searching for datasets this one stuck out to me as it was a statistics on the how many baby’s had a specific name during a specific year. The statisitics were acquired by using the social security number applicants being asssigned to newborn baby’s. The first dataset I chose was the amount of applicants. This included the year, sex, and amount of applicants total(n_all) that were participating in the baby names statistic. The second dataset, baby names, included the year, sex, name of baby’s, n (which is the amount of applicants with that name in the specific year), and prop (proportion of people with the specific gender and that specific name in the year). The third dataset, lifetables, included the amount of births in the specific year.<br />
+Tidy:
+## Tidy: The datasets were already tidy before joining.</p>
+<pre class="r"><code>library(tidyverse)
+install.packages(&quot;babynames&quot;)</code></pre>
+<pre><code>## 
+## The downloaded binary packages are in
+##  /var/folders/6_/09qvp4pn7yd0yqttvcx_flb00000gn/T//RtmpuoW5nr/downloaded_packages</code></pre>
+<pre class="r"><code>?babynames</code></pre>
+<pre><code>## No documentation for &#39;babynames&#39; in specified packages and libraries:
+## you could try &#39;??babynames&#39;</code></pre>
+<pre class="r"><code>applicants &lt;- babynames::applicants
+applicants</code></pre>
+<pre><code>## # A tibble: 276 x 3
+##     year sex    n_all
+##    &lt;int&gt; &lt;chr&gt;  &lt;int&gt;
+##  1  1880 F      97605
+##  2  1880 M     118400
+##  3  1881 F      98855
+##  4  1881 M     108282
+##  5  1882 F     115695
+##  6  1882 M     122031
+##  7  1883 F     120059
+##  8  1883 M     112477
+##  9  1884 F     137586
+## 10  1884 M     122738
+## # … with 266 more rows</code></pre>
+<pre class="r"><code>babynames &lt;- babynames::babynames
+babynames</code></pre>
+<pre><code>## # A tibble: 1,924,665 x 5
+##     year sex   name          n   prop
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;
+##  1  1880 F     Mary       7065 0.0724
+##  2  1880 F     Anna       2604 0.0267
+##  3  1880 F     Emma       2003 0.0205
+##  4  1880 F     Elizabeth  1939 0.0199
+##  5  1880 F     Minnie     1746 0.0179
+##  6  1880 F     Margaret   1578 0.0162
+##  7  1880 F     Ida        1472 0.0151
+##  8  1880 F     Alice      1414 0.0145
+##  9  1880 F     Bertha     1320 0.0135
+## 10  1880 F     Sarah      1288 0.0132
+## # … with 1,924,655 more rows</code></pre>
+<pre class="r"><code>lifetables &lt;- babynames::births
+lifetables</code></pre>
+<pre><code>## # A tibble: 109 x 2
+##     year  births
+##    &lt;int&gt;   &lt;int&gt;
+##  1  1909 2718000
+##  2  1910 2777000
+##  3  1911 2809000
+##  4  1912 2840000
+##  5  1913 2869000
+##  6  1914 2966000
+##  7  1915 2965000
+##  8  1916 2964000
+##  9  1917 2944000
+## 10  1918 2948000
+## # … with 99 more rows</code></pre>
+<p>Join 2+ Datasets
+I joined the first two datasets, “applicants and babynames” by year and sex. I did a full join considering they shared these two variables, and called the dataset “merged”. I then did a second full join to join the third dataset, lifetables by joining by year . I called the final dataset “merged new”&quot; that included all three datasets.
+No cases were dropped in joining all three datasets.</p>
+<pre class="r"><code>merged &lt;-babynames %&gt;% full_join(applicants)
+mergednew&lt;- merged %&gt;% full_join(lifetables)
+mergednew</code></pre>
+<pre><code>## # A tibble: 1,924,665 x 7
+##     year sex   name          n   prop n_all births
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt; &lt;int&gt;  &lt;int&gt;
+##  1  1880 F     Mary       7065 0.0724 97605     NA
+##  2  1880 F     Anna       2604 0.0267 97605     NA
+##  3  1880 F     Emma       2003 0.0205 97605     NA
+##  4  1880 F     Elizabeth  1939 0.0199 97605     NA
+##  5  1880 F     Minnie     1746 0.0179 97605     NA
+##  6  1880 F     Margaret   1578 0.0162 97605     NA
+##  7  1880 F     Ida        1472 0.0151 97605     NA
+##  8  1880 F     Alice      1414 0.0145 97605     NA
+##  9  1880 F     Bertha     1320 0.0135 97605     NA
+## 10  1880 F     Sarah      1288 0.0132 97605     NA
+## # … with 1,924,655 more rows</code></pre>
+<p>Wrangling
+In order to make my data more readable the first operation I did was create a new data frame called “newer”. In this data frame I created a new function using dplyr ‘mutate’ called “Namesfromfamily” to get the amount of those applicants with that specific name multiplied by the proportion of those who had that name. Using ‘filter’ I eliminated data that did not have the amount of births recorded in a specific year. As well as, ‘renamed’ n_all to be more readable as “totalapplicants”. The first dplyr functions I used were ‘filter’, ‘select’, and ‘arrange’, I found the amount of names in the year 1910 by descending order, which meant the greatest number of names found in 1910 were 22848. I did a similar code in my second dplyr function using ‘select’, and ‘arrange’. I selected the year, sex, name and birth, then arranged in descending order the greatest number of births. I found the year 2007 to have the greatest number of births with a multitude of different names. I used ‘group_by’ dplyr function to group the “names” then used ‘summarize’ to get the mean from each “Namesfromfamily”. I then used ‘group_by’ and ‘arrange’ to get the year arranged by the greatest proportion which was in year 2007.</p>
+<p>For summary statistics, I used ‘summarize’ function to find the standard deviation of the amount of people with that name (n), 1564.624. I then used the ‘summarize_all’ function to make sure none of my values were missing values, which was 0, meaning no values were missing values. I used the ‘summarize_at’ with ‘mean’ for “year, Namesfromfamily, and n” to find the numerical mean for each which was, year= 1978.498, Namesfromfamily= 1.493726, and n=184.0135. I used ‘group_by’ , ‘summarize’, with ‘sd’ to group by “sex” and find the standard deviation of “births” and “Namesfromfamily”. For female, 507727.0 sd for births and 29.34482 sd for Namesfromfamily. For male, 534744.7 sd for births and 59.94562 sd for Namesfromfamily. I used ‘group_by’ “sex” and “name” then used ‘summarize’ function with ‘min’ to find the minimum “proportion” and minimum “totalapplicants”. I did a similar function for the next code using ‘group_by’ and ‘summarize’ with ‘max’ to find the max “n” and “births” for each specific year. I did a similar function but used ‘group_by’ and ‘summarize’ with ‘var’ to find the variance in Namesfromfamily grouped by name. Using ‘group_by’, ‘summarize’ and ‘IQR’ for “n” I found the IQR for n for each sex which was 23 for female, and 26 for male. I then did a correlation matrix with ‘cor’ function to find the greatest correlation, which was between “births” and “totalapplicants” with correlation 0.93345366. For my second to last code I used ‘group_by’ and ‘summarize’ with ‘median’ to find the median of “n” per year. My last code I used ‘summarize’ to find the last numerical birth which was 3855500.
+In demonstrating the usage of ‘pivot_longer’(since my data was already tidy) , I used column “n” to fall under “Namespicked” and the moved the values to “Namesvalue”. To demonstrate ‘pivot_wider’ I first reduced my large set of data to the first 10 observations. I then made the “names” there own column with there own name and moved the value “n” under each name.</p>
+<pre class="r"><code>newer &lt;- mergednew %&gt;% mutate(Namesfromfamily = prop*n)%&gt;% filter(!is.na(births)) %&gt;% rename(totalapplicants=n_all)
+newer</code></pre>
+<pre><code>## # A tibble: 1,839,952 x 8
+##     year sex   name          n   prop totalapplicants  births Namesfromfamily
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;           &lt;int&gt;   &lt;int&gt;           &lt;dbl&gt;
+##  1  1909 F     Mary      19259 0.0523          368096 2718000          1008. 
+##  2  1909 F     Helen      9250 0.0251          368096 2718000           232. 
+##  3  1909 F     Margaret   7359 0.0200          368096 2718000           147. 
+##  4  1909 F     Ruth       6509 0.0177          368096 2718000           115. 
+##  5  1909 F     Dorothy    6253 0.0170          368096 2718000           106. 
+##  6  1909 F     Anna       5804 0.0158          368096 2718000            91.5
+##  7  1909 F     Elizabeth  5176 0.0141          368096 2718000            72.8
+##  8  1909 F     Mildred    5054 0.0137          368096 2718000            69.4
+##  9  1909 F     Marie      4301 0.0117          368096 2718000            50.3
+## 10  1909 F     Alice      4170 0.0113          368096 2718000            47.2
+## # … with 1,839,942 more rows</code></pre>
+<pre class="r"><code>newer %&gt;% filter(year == 1910) %&gt;% select(n) %&gt;% arrange(desc(n))</code></pre>
+<pre><code>## # A tibble: 4,629 x 1
+##        n
+##    &lt;int&gt;
+##  1 22848
+##  2 11450
+##  3 10479
+##  4  9195
+##  5  8844
+##  6  8226
+##  7  7318
+##  8  7212
+##  9  6436
+## 10  5800
+## # … with 4,619 more rows</code></pre>
+<pre class="r"><code>newer %&gt;% select(year,sex,name, births) %&gt;% arrange(desc(births))</code></pre>
+<pre><code>## # A tibble: 1,839,952 x 4
+##     year sex   name       births
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;       &lt;int&gt;
+##  1  2007 F     Emily     4316233
+##  2  2007 F     Isabella  4316233
+##  3  2007 F     Emma      4316233
+##  4  2007 F     Ava       4316233
+##  5  2007 F     Madison   4316233
+##  6  2007 F     Sophia    4316233
+##  7  2007 F     Olivia    4316233
+##  8  2007 F     Abigail   4316233
+##  9  2007 F     Hannah    4316233
+## 10  2007 F     Elizabeth 4316233
+## # … with 1,839,942 more rows</code></pre>
+<pre class="r"><code>newer %&gt;% group_by(name) %&gt;% summarize(mean(Namesfromfamily))</code></pre>
+<pre><code>## # A tibble: 97,227 x 2
+##    name      `mean(Namesfromfamily)`
+##    &lt;chr&gt;                       &lt;dbl&gt;
+##  1 Aaban                   0.0000622
+##  2 Aabha                   0.0000261
+##  3 Aabid                   0.0000122
+##  4 Aabir                   0.0000124
+##  5 Aabriella               0.0000239
+##  6 Aada                    0.0000128
+##  7 Aadam                   0.0000594
+##  8 Aadan                   0.0000807
+##  9 Aadarsh                 0.0000712
+## 10 Aaden                   0.0828   
+## # … with 97,217 more rows</code></pre>
+<pre class="r"><code>newer %&gt;% group_by(year) %&gt;% arrange(prop)</code></pre>
+<pre><code>## # A tibble: 1,839,952 x 8
+## # Groups:   year [109]
+##     year sex   name           n      prop totalapplicants births Namesfromfamily
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      &lt;int&gt;     &lt;dbl&gt;           &lt;int&gt;  &lt;int&gt;           &lt;dbl&gt;
+##  1  2007 M     Aaban          5   2.26e-6         2213423 4.32e6       0.0000113
+##  2  2007 M     Aareon         5   2.26e-6         2213423 4.32e6       0.0000113
+##  3  2007 M     Aaris          5   2.26e-6         2213423 4.32e6       0.0000113
+##  4  2007 M     Abd            5   2.26e-6         2213423 4.32e6       0.0000113
+##  5  2007 M     Abdulazeez     5   2.26e-6         2213423 4.32e6       0.0000113
+##  6  2007 M     Abdulhadi      5   2.26e-6         2213423 4.32e6       0.0000113
+##  7  2007 M     Abdulhamid     5   2.26e-6         2213423 4.32e6       0.0000113
+##  8  2007 M     Abdulkadir     5   2.26e-6         2213423 4.32e6       0.0000113
+##  9  2007 M     Abdulrahe…     5   2.26e-6         2213423 4.32e6       0.0000113
+## 10  2007 M     Abdulrahim     5   2.26e-6         2213423 4.32e6       0.0000113
+## # … with 1,839,942 more rows</code></pre>
+<pre class="r"><code>newer %&gt;% summarize(sd(n))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   `sd(n)`
+##     &lt;dbl&gt;
+## 1   1565.</code></pre>
+<pre class="r"><code>newer %&gt;% summarize_all(function(x)sum(is.na(x)))</code></pre>
+<pre><code>## # A tibble: 1 x 8
+##    year   sex  name     n  prop totalapplicants births Namesfromfamily
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;           &lt;int&gt;  &lt;int&gt;           &lt;int&gt;
+## 1     0     0     0     0     0               0      0               0</code></pre>
+<pre class="r"><code>newer %&gt;% summarize_at(c(&quot;year&quot;, &quot;Namesfromfamily&quot;, &quot;n&quot;), mean, na.rm=T)</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##    year Namesfromfamily     n
+##   &lt;dbl&gt;           &lt;dbl&gt; &lt;dbl&gt;
+## 1 1978.            1.49  184.</code></pre>
+<pre class="r"><code>newer %&gt;% group_by(sex) %&gt;%
+  summarize(sd_births= sd(births, na.rm=T), sd_Namesfromfamily=sd(Namesfromfamily, na.rm = T))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   sex   sd_births sd_Namesfromfamily
+##   &lt;chr&gt;     &lt;dbl&gt;              &lt;dbl&gt;
+## 1 F       507727.               29.3
+## 2 M       534745.               59.9</code></pre>
+<pre class="r"><code>newer %&gt;% group_by(sex, name) %&gt;% summarize(min(prop), min(totalapplicants))</code></pre>
+<pre><code>## # A tibble: 107,880 x 4
+## # Groups:   sex [2]
+##    sex   name      `min(prop)` `min(totalapplicants)`
+##    &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;                  &lt;int&gt;
+##  1 F     Aabha      0.00000258                1928438
+##  2 F     Aabriella  0.0000024                 1874899
+##  3 F     Aada       0.00000257                1945317
+##  4 F     Aaden      0.00000247                2022977
+##  5 F     Aadhira    0.0000031                 1874899
+##  6 F     Aadhvika   0.00000467                1928438
+##  7 F     Aadhya     0.00000432                1874899
+##  8 F     Aadi       0.00000239                1923856
+##  9 F     Aadilynn   0.00000267                1874899
+## 10 F     Aadison    0.00000258                1936239
+## # … with 107,870 more rows</code></pre>
+<pre class="r"><code>newer %&gt;% group_by(year) %&gt;% summarize(max(n), max(births))</code></pre>
+<pre><code>## # A tibble: 109 x 3
+##     year `max(n)` `max(births)`
+##    &lt;dbl&gt;    &lt;int&gt;         &lt;int&gt;
+##  1  1909    19259       2718000
+##  2  1910    22848       2777000
+##  3  1911    24390       2809000
+##  4  1912    32304       2840000
+##  5  1913    36642       2869000
+##  6  1914    45345       2966000
+##  7  1915    58187       2965000
+##  8  1916    61438       2964000
+##  9  1917    64281       2944000
+## 10  1918    67366       2948000
+## # … with 99 more rows</code></pre>
+<pre class="r"><code>newer %&gt;% group_by(name) %&gt;% summarize(var(Namesfromfamily))</code></pre>
+<pre><code>## # A tibble: 97,227 x 2
+##    name      `var(Namesfromfamily)`
+##    &lt;chr&gt;                      &lt;dbl&gt;
+##  1 Aaban          0.00000000146    
+##  2 Aabha          0.000000000103   
+##  3 Aabid          0.000000000000125
+##  4 Aabir         NA                
+##  5 Aabriella      0.000000000479   
+##  6 Aada          NA                
+##  7 Aadam          0.00000000416    
+##  8 Aadan          0.00000000631    
+##  9 Aadarsh        0.00000000149    
+## 10 Aaden          0.0378           
+## # … with 97,217 more rows</code></pre>
+<pre class="r"><code>newer %&gt;% group_by(sex) %&gt;% summarize(IQR(n))</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   sex   `IQR(n)`
+##   &lt;chr&gt;    &lt;dbl&gt;
+## 1 F           23
+## 2 M           26</code></pre>
+<pre class="r"><code>newer %&gt;% select_if(is.numeric) %&gt;% na.omit %&gt;% cor %&gt;% t</code></pre>
+<pre><code>##                        year            n        prop totalapplicants
+## year             1.00000000 -0.033441296 -0.06067839     0.825622045
+## n               -0.03344130  1.000000000  0.95141280    -0.009296685
+## prop            -0.06067839  0.951412797  1.00000000    -0.050618493
+## totalapplicants  0.82562204 -0.009296685 -0.05061849     1.000000000
+## births           0.77853911 -0.013555810 -0.04696517     0.933453663
+## Namesfromfamily -0.02344200  0.829471597  0.83495342    -0.011681144
+##                      births Namesfromfamily
+## year             0.77853911     -0.02344200
+## n               -0.01355581      0.82947160
+## prop            -0.04696517      0.83495342
+## totalapplicants  0.93345366     -0.01168114
+## births           1.00000000     -0.01365519
+## Namesfromfamily -0.01365519      1.00000000</code></pre>
+<pre class="r"><code>newer %&gt;% group_by(year) %&gt;% summarize(median_n= median(n), na.rm=T)</code></pre>
+<pre><code>## # A tibble: 109 x 3
+##     year median_n na.rm
+##    &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;
+##  1  1909       12 TRUE 
+##  2  1910       12 TRUE 
+##  3  1911       12 TRUE 
+##  4  1912       12 TRUE 
+##  5  1913       12 TRUE 
+##  6  1914       12 TRUE 
+##  7  1915       12 TRUE 
+##  8  1916       12 TRUE 
+##  9  1917       12 TRUE 
+## 10  1918       12 TRUE 
+## # … with 99 more rows</code></pre>
+<pre class="r"><code>newer %&gt;% summarize(last_births= last(births), na.rm=T)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   last_births na.rm
+##         &lt;int&gt; &lt;lgl&gt;
+## 1     3855500 TRUE</code></pre>
+<pre class="r"><code>newer %&gt;% pivot_longer(cols=c(&quot;n&quot;), names_to = &quot;Namespicked&quot;, values_to = &quot;Namesvalues&quot;)</code></pre>
+<pre><code>## # A tibble: 1,839,952 x 9
+##     year sex   name    prop totalapplicants births Namesfromfamily Namespicked
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;           &lt;int&gt;  &lt;int&gt;           &lt;dbl&gt; &lt;chr&gt;      
+##  1  1909 F     Mary  0.0523          368096 2.72e6          1008.  n          
+##  2  1909 F     Helen 0.0251          368096 2.72e6           232.  n          
+##  3  1909 F     Marg… 0.0200          368096 2.72e6           147.  n          
+##  4  1909 F     Ruth  0.0177          368096 2.72e6           115.  n          
+##  5  1909 F     Doro… 0.0170          368096 2.72e6           106.  n          
+##  6  1909 F     Anna  0.0158          368096 2.72e6            91.5 n          
+##  7  1909 F     Eliz… 0.0141          368096 2.72e6            72.8 n          
+##  8  1909 F     Mild… 0.0137          368096 2.72e6            69.4 n          
+##  9  1909 F     Marie 0.0117          368096 2.72e6            50.3 n          
+## 10  1909 F     Alice 0.0113          368096 2.72e6            47.2 n          
+## # … with 1,839,942 more rows, and 1 more variable: Namesvalues &lt;int&gt;</code></pre>
+<pre class="r"><code>fordemonstration &lt;-newer[1:10,]
+fordemonstration %&gt;% pivot_wider(names_from = &quot;name&quot;, values_from = &quot;n&quot;)</code></pre>
+<pre><code>## # A tibble: 10 x 16
+##     year sex     prop totalapplicants births Namesfromfamily  Mary Helen
+##    &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt;           &lt;int&gt;  &lt;int&gt;           &lt;dbl&gt; &lt;int&gt; &lt;int&gt;
+##  1  1909 F     0.0523          368096 2.72e6          1008.  19259    NA
+##  2  1909 F     0.0251          368096 2.72e6           232.     NA  9250
+##  3  1909 F     0.0200          368096 2.72e6           147.     NA    NA
+##  4  1909 F     0.0177          368096 2.72e6           115.     NA    NA
+##  5  1909 F     0.0170          368096 2.72e6           106.     NA    NA
+##  6  1909 F     0.0158          368096 2.72e6            91.5    NA    NA
+##  7  1909 F     0.0141          368096 2.72e6            72.8    NA    NA
+##  8  1909 F     0.0137          368096 2.72e6            69.4    NA    NA
+##  9  1909 F     0.0117          368096 2.72e6            50.3    NA    NA
+## 10  1909 F     0.0113          368096 2.72e6            47.2    NA    NA
+## # … with 8 more variables: Margaret &lt;int&gt;, Ruth &lt;int&gt;, Dorothy &lt;int&gt;,
+## #   Anna &lt;int&gt;, Elizabeth &lt;int&gt;, Mildred &lt;int&gt;, Marie &lt;int&gt;, Alice &lt;int&gt;</code></pre>
+</div>
+<div id="including-plots" class="section level2">
+<h2>Including Plots</h2>
+<p>Visualizing
+The first code I ran was a correlation heatmap of my numerical variables. I coded this on a ‘scale_fill_gradient’, showing the less correlation they have are shown in red, and the greater correlation are in blue. Interpreting this heatmap the greater correlations are seen between “totalapplicants” and “births” with 0.93. As well as between “prop” and “n” with a greater correlation of 0.95. The second code I codensed the dataset to 10000 variables due to the overwhelming amount of observations being 1839952 which caused R studio to glitch. This new condensed dataset was called “newermost”. This new dataset was plotted using ggplot with x-axis labeled as year, y-axis being labeled as birth, and the two lines being plotted as male and female sex. This plot showed the “Amount of Births per Year in correlation to sex”. It was shown that in total there were a greater amount of female births than males births. Although through the years of 1909 through 1910 male births were greater.
+The second ggplot graph, was condensed even more to show variables 1 through 100, called “mostnewdata”. This new ggplot graph was labeled “Relationship of the Amount of Names in correlation to Proportion” which plotted the Amount of Name (n) against proportion(prop). The “Namesfromfamily ’’ showed the linear relationship of the two. It was shown as the amount of names increased the proportion increased.This was graphed on a log scale and the ‘scale_color_gradient’ was used to visually show the increase.</p>
+<pre class="r"><code>newer %&gt;% select_if(is.numeric) %&gt;% cor %&gt;% as.data.frame %&gt;%
+  rownames_to_column %&gt;% pivot_longer(-1) %&gt;% na.omit %&gt;% ggplot(aes(rowname, name, fill=value))+ 
+  geom_tile()+geom_text(aes(label=round(value,2)))+ xlab(&quot;&quot;)+ylab(&quot;&quot;)+scale_fill_gradient(low=&quot;red&quot;, high = &quot;blue&quot;)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>library(ggplot2)
+
+
+newermost &lt;- newer[1:10000,]
+ggplot(data= newermost, aes(x = year, y = births, color= sex )) + geom_smooth(method= &quot;lm&quot;) +ggtitle(&quot;Amount of Births per Year according to sex&quot;)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>mostnewdata &lt;- newer [1:100,]
+mostnewdata</code></pre>
+<pre><code>## # A tibble: 100 x 8
+##     year sex   name          n   prop totalapplicants  births Namesfromfamily
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;           &lt;int&gt;   &lt;int&gt;           &lt;dbl&gt;
+##  1  1909 F     Mary      19259 0.0523          368096 2718000          1008. 
+##  2  1909 F     Helen      9250 0.0251          368096 2718000           232. 
+##  3  1909 F     Margaret   7359 0.0200          368096 2718000           147. 
+##  4  1909 F     Ruth       6509 0.0177          368096 2718000           115. 
+##  5  1909 F     Dorothy    6253 0.0170          368096 2718000           106. 
+##  6  1909 F     Anna       5804 0.0158          368096 2718000            91.5
+##  7  1909 F     Elizabeth  5176 0.0141          368096 2718000            72.8
+##  8  1909 F     Mildred    5054 0.0137          368096 2718000            69.4
+##  9  1909 F     Marie      4301 0.0117          368096 2718000            50.3
+## 10  1909 F     Alice      4170 0.0113          368096 2718000            47.2
+## # … with 90 more rows</code></pre>
+<pre class="r"><code>ggplot(mostnewdata, aes(x= n, y= prop, color= Namesfromfamily), size= 2, alpha=.5) + 
+  geom_point() + scale_x_log10()+scale_y_log10() +
+  scale_color_gradient(low=&quot;yellow&quot;, high=&quot;red&quot;) + xlab(&quot;Amount of Name(n)&quot;) + 
+  ylab(&quot;Proportion(prop)&quot;) + 
+  ggtitle(&quot;Relationship of the Amount of Names in correlation to Proportion&quot;) </code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Dimensionality Reduction:
+In order to find the number of clusters for kmeans, I first reduced my data to 10000 variables calling it “thenew”. I then selected 3 numerical variables such as “Namesfromfamily, n, and prop” from “thenew” to be called “clust_dat”. Before finding the x variable in “kmeans(x)” number, I used WSS to find the number of clusters. After multiple trial and error, I chose the number 5 to be the most efficient as it started to gradually decrease from “the elbow”. In order to continue searching for the correct number of clusters I plotted the graph using ggplot to see if “Proportion (prop)” against “Amount of name (n)” would give me insight as to how many clusters I should choose. The distribution was unclear so I decided to do silhouette width in k means to find if the greatests silhouette width would give me the correct number of clusters. After analyzing all three, “WSS, ggplot, and Silhouette width” I decided the number of clusters to be 5. I then plotted this in ggplot using “kmeansclust” as it was first mutated to become a column, I plotted the “Proportion (prop)” on the x-axis, and the “Amount of Name (n)” on the y-axis, clustering by “Namesfromfamily”. I also used ‘scale_color_gradientn’ with rainbow to make the clusters more visible. Overall through multiple trial and error I found 5 clusters to be the most effective in visually displaying the data.</p>
+<pre class="r"><code>library(cluster)
+thenew &lt;- newer[1:10000,]
+thenew</code></pre>
+<pre><code>## # A tibble: 10,000 x 8
+##     year sex   name          n   prop totalapplicants  births Namesfromfamily
+##    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;  &lt;dbl&gt;           &lt;int&gt;   &lt;int&gt;           &lt;dbl&gt;
+##  1  1909 F     Mary      19259 0.0523          368096 2718000          1008. 
+##  2  1909 F     Helen      9250 0.0251          368096 2718000           232. 
+##  3  1909 F     Margaret   7359 0.0200          368096 2718000           147. 
+##  4  1909 F     Ruth       6509 0.0177          368096 2718000           115. 
+##  5  1909 F     Dorothy    6253 0.0170          368096 2718000           106. 
+##  6  1909 F     Anna       5804 0.0158          368096 2718000            91.5
+##  7  1909 F     Elizabeth  5176 0.0141          368096 2718000            72.8
+##  8  1909 F     Mildred    5054 0.0137          368096 2718000            69.4
+##  9  1909 F     Marie      4301 0.0117          368096 2718000            50.3
+## 10  1909 F     Alice      4170 0.0113          368096 2718000            47.2
+## # … with 9,990 more rows</code></pre>
+<pre class="r"><code>clust_dat &lt;- thenew %&gt;% select(Namesfromfamily, n,prop)
+kmeans1 &lt;- clust_dat %&gt;% scale %&gt;% kmeans(5)
+kmeans1</code></pre>
+<pre><code>## K-means clustering with 5 clusters of sizes 9625, 61, 302, 9, 3
+## 
+## Cluster means:
+##   Namesfromfamily          n      prop
+## 1     -0.05776314 -0.1350666 -0.131801
+## 2      2.92884892  6.7258882  6.543999
+## 3      0.32420967  2.2330245  2.095194
+## 4     15.10429486 13.4496180 18.119893
+## 5     47.82015558 31.4389788 24.524382
+## 
+## Clustering vector:
+##   [1] 5 4 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+##  [38] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+##  [75] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1
+##  [ reached getOption(&quot;max.print&quot;) -- omitted 9900 entries ]
+## 
+## Within cluster sum of squares by cluster:
+## [1] 569.9079 814.7096 621.7550 465.7491 125.4612
+##  (between_SS / total_SS =  91.3 %)
+## 
+## Available components:
+## 
+## [1] &quot;cluster&quot;      &quot;centers&quot;      &quot;totss&quot;        &quot;withinss&quot;     &quot;tot.withinss&quot;
+## [6] &quot;betweenss&quot;    &quot;size&quot;         &quot;iter&quot;         &quot;ifault&quot;</code></pre>
+<pre class="r"><code>kmeans1$centers</code></pre>
+<pre><code>##   Namesfromfamily          n      prop
+## 1     -0.05776314 -0.1350666 -0.131801
+## 2      2.92884892  6.7258882  6.543999
+## 3      0.32420967  2.2330245  2.095194
+## 4     15.10429486 13.4496180 18.119893
+## 5     47.82015558 31.4389788 24.524382</code></pre>
+<pre class="r"><code>kmeans1$cluster</code></pre>
+<pre><code>##   [1] 5 4 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+##  [38] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+##  [75] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1 1
+##  [ reached getOption(&quot;max.print&quot;) -- omitted 9900 entries ]</code></pre>
+<pre class="r"><code>wss&lt;-vector()
+for(i in 1:10){
+  new&lt;- thenew %&gt;% select(prop,n) %&gt;% kmeans(i)
+  wss[i]&lt;-new$tot.withinss
+}
+ggplot()+geom_point(aes(x=1:10, y=wss))+geom_path(aes(x=1:10, y=wss))+ xlab(&quot;clusters&quot;) + scale_x_continuous(breaks = 1:10)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>thenew %&gt;% ggplot()+geom_point(aes(prop,n))</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>kmeansclust &lt;- clust_dat %&gt;% mutate(cluster=as.factor(kmeans1$cluster))
+kmeansclust %&gt;% ggplot(aes(prop,n, color=Namesfromfamily)) + geom_point() + ylab(&quot;Amount of Name(n)&quot;) + xlab(&quot;Proportion(prop)&quot;) + ggtitle(&quot;kmeans&quot;)+ scale_color_gradientn(colours= rainbow(5))</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sil_width &lt;- vector()
+for(i in 2:10){
+  kms&lt;- kmeans(clust_dat,centers=i)
+  sil&lt;- silhouette(kms$cluster, dist(clust_dat))
+  sil_width[i]&lt;- mean(sil[,3])
+}
+ggplot()+geom_line(aes(x=1:10, y=sil_width))+ scale_x_continuous(name=&quot;k&quot;, breaks=1:10)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-5-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+</div>
+
+              <hr>
+              <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div>
+            </div>
+          </div>
+          <hr>
+        <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+        </div>
+      </div>
+      
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/docs.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,69 @@
+---
+title: Python
+author: Danielle De La Paz
+date: '2020-05-13'
+slug: python
+categories: []
+tags: []
+description: ''
+---
+Hey Y'all!
+Welcome to my first Python Blog Post!
+Before I dive right in, please enjoy this picture of my doggo Tipsy! I got her as a present when I was studying for my DAT and we've been best friends ever since !!!
+![](/blog/2020-05-13-python_files/Tipsydoggo2.PNG)
+
+To start, in my SDS 348 class we have been learning about the interaction between R code and Python. I thought it would be neat to discuss how they interact with each other. To begin I included an R code chunk to show you how the two can work together!!
+R code:
+```{R}
+library(reticulate)
+Tipsy<- "Tipsy is a Future Dental"
+```
+Python code:
+```{python}
+Tipsy="Doggo"
+print(r.Tipsy,Tipsy)
+```
+Hehehe as y'all know I aspire to become a Dentist so I thought it would only be appropriate to include my bestie in the code. This code begins with an R chunk followed by  a python chunk, within the function "print" I was able to access the R defined object to make a complete sentence. 
+
+Another cool feature in Python is finding how many times a certain instance occcurs within a string.
+Below are a couple examples of how python can take a long string and find how many times something occurs.
+
+The first thing were going to search for is exactly how many times does the word "dog" occur followed by anything.
+```{python}
+import re
+x="dog doggy dogwalker dogggo odddog funnydog dogsgonewild wholetthedogsout"
+re.findall(r"dog.",x) 
+```
+This shows that there are 8 matches of the word "dog" followed by anything.
+
+The next example were going to search for is exactly how many times the letter d appears followed by anything than the letter g occurs.
+```{python}
+re.findall(r"d.g",x)
+```
+This example also shows that there are 8 matches of the letter "d" followed by anything than the letter "g".
+
+Another cool python function is being able to filter a list with the function "regex". In this example I will use a list with multiple strings and use filter to match the pattern I want from the list. This certain list is names I thought about naming tipsy before I got her. The pattern I am looking for is how many names start with the letter "j".
+
+
+```{python}
+import re
+s=["june", "junebug", "july", "bunny", "martini", "jane","joy"]
+
+list(filter(lambda x: re.search(r'^j',x),s))
+
+```
+
+This list output shows that exactly 5 matches with the name that start with J were filtered from the list of potential dog names.
+
+Another example of this same function of regex and filtering with a list can be used with looking for how many instances of "un" occur within the list on names.
+```{python}
+list(filter(lambda x: re.search(r'.+un', x),s))
+```
+This list output shows that 3 matches with the name that includes a "un" were filtered from the list of potential dog names.
+
+Overall I hope this blog gave a small sneak peek into how R and Python can be used to interact with each other. The SDS 348 class gave me insight as to how R and Python codes are useful in coordiating with each other to produce great outputs.
+
+
+Have a great summer! - Danielle De La Paz
+
+
